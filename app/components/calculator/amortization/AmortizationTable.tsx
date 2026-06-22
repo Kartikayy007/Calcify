@@ -20,7 +20,7 @@ export function AmortizationTable({ rows, breakEvenMonth, page, onPageChange }: 
       {breakEvenMonth !== null && (
         <div className="flex items-center gap-2 text-sm font-semibold text-emerald-600 dark:text-emerald-400">
           <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.7)]" />
-          Break-even at month {breakEvenMonth} — cumulative principal exceeds cumulative interest
+          Break-even at month {breakEvenMonth} <span className="hidden sm:inline">— cumulative principal exceeds cumulative interest</span>
         </div>
       )}
 

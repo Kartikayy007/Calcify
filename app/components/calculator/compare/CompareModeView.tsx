@@ -77,7 +77,7 @@ export function CompareModeView({ scenarios, activeScenarioId, onScenarioChange,
         )}
       </div>
 
-      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${showIndicator ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}>
+      <div className={`fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${showIndicator ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}>
         <div 
           className="w-12 h-12 rounded-full clay-btn flex items-center justify-center text-foreground cursor-pointer shadow-xl shadow-black/20"
           onClick={() => window.scrollBy({ top: 300, behavior: 'smooth' })}
