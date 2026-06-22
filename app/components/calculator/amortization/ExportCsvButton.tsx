@@ -6,12 +6,13 @@ import { exportScheduleCsv } from "../../../lib/export";
 interface ExportCsvButtonProps {
   rows: ScheduleRow[];
   filename?: string;
+  breakEvenMonth?: number | null;
 }
 
-export function ExportCsvButton({ rows, filename }: ExportCsvButtonProps) {
+export function ExportCsvButton({ rows, filename, breakEvenMonth }: ExportCsvButtonProps) {
   return (
     <button
-      onClick={() => exportScheduleCsv(rows, filename)}
+      onClick={() => exportScheduleCsv(rows, filename, breakEvenMonth)}
       className="flex items-center gap-2 p-1.5 px-4 rounded-full clay-btn transition-colors duration-300 text-muted-foreground hover:text-emerald-500 hover:dark:text-emerald-400"
       title="Export schedule as CSV"
     >

@@ -34,7 +34,7 @@ export function AmortizationSection({
         </div>
 
         <div className="flex items-center gap-4 flex-wrap w-full sm:w-auto justify-between sm:justify-start">
-          <ExportCsvButton rows={rows} />
+          <ExportCsvButton rows={rows} breakEvenMonth={breakEvenMonth} />
           <div className="flex items-center p-1.5 rounded-full clay-pill relative">
             <div
               className="absolute top-1.5 bottom-1.5 w-[72px] clay-btn rounded-full transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] z-0"
