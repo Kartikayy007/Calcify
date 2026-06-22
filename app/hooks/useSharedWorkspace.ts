@@ -81,11 +81,17 @@ export function useSharedWorkspace() {
     }
     return defaultWorkspaceState;
   });
-  const [presence, setPresence] = useState<Record<string, PresenceEntry>>({});
+  const [activeTabs, setActiveTabs] = useState(1);
+  const presenceRef = useRef<Record<string, PresenceEntry>>({});
   const channelRef = useRef<BroadcastChannel | null>(null);
   const lastUpdateRef = useRef({ updatedAt: 0, sourceTabId: "" });
   const stateRef = useRef(state);
   stateRef.current = state;
+
+  const syncCount = useCallback(() => {
+    const count = Object.keys(presenceRef.current).length || 1;
+    setActiveTabs((prev) => (prev === count ? prev : count));
+  }, []);
 
   useEffect(() => {
     const tab = createTabIdentity();
@@ -93,7 +99,8 @@ export function useSharedWorkspace() {
     window.queueMicrotask(() => {
       setTabId(tab.id);
       setTabLabel(tab.label);
-      setPresence({ [tab.id]: { label: tab.label, seenAt: Date.now() } });
+      presenceRef.current = { [tab.id]: { label: tab.label, seenAt: Date.now() } };
+      syncCount();
     });
 
     if (typeof window !== "undefined") {
@@ -108,7 +115,7 @@ export function useSharedWorkspace() {
         }));
       }
     }
-  }, []);
+  }, [syncCount]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", state.theme === "dark");
@@ -124,10 +131,8 @@ export function useSharedWorkspace() {
     channelRef.current = channel;
 
     const markPresent = (sourceTabId: string, label: string, seenAt: number) => {
-      setPresence((current) => ({
-        ...current,
-        [sourceTabId]: { label, seenAt },
-      }));
+      presenceRef.current[sourceTabId] = { label, seenAt };
+      syncCount();
     };
 
     channel.onmessage = (event: MessageEvent<SyncMessage>) => {
@@ -143,11 +148,8 @@ export function useSharedWorkspace() {
       }
 
       if (message.type === "leave") {
-        setPresence((current) => {
-          const next = { ...current };
-          delete next[message.sourceTabId];
-          return next;
-        });
+        delete presenceRef.current[message.sourceTabId];
+        syncCount();
         return;
       }
 
@@ -199,9 +201,10 @@ export function useSharedWorkspace() {
     const heartbeatId = window.setInterval(postHeartbeat, HEARTBEAT_MS);
     const pruneId = window.setInterval(() => {
       const cutoff = Date.now() - STALE_AFTER_MS;
-      setPresence((current) =>
-        Object.fromEntries(Object.entries(current).filter(([id, entry]) => id === tabId || entry.seenAt >= cutoff)),
+      presenceRef.current = Object.fromEntries(
+        Object.entries(presenceRef.current).filter(([id, entry]) => id === tabId || entry.seenAt >= cutoff),
       );
+      syncCount();
     }, HEARTBEAT_MS);
 
     const leave = () => {
@@ -220,7 +223,7 @@ export function useSharedWorkspace() {
       channel.close();
       channelRef.current = null;
     };
-  }, [tabId, tabLabel]);
+  }, [tabId, tabLabel, syncCount]);
 
   const dispatchWorkspace = useCallback(
     (action: WorkspaceAction) => {
@@ -259,7 +262,7 @@ export function useSharedWorkspace() {
     dispatchWorkspace,
     dispatchLocal,
     tabLabel,
-    activeTabs: Object.keys(presence).length || 1,
+    activeTabs,
     isConnected: !!tabId,
   };
 }

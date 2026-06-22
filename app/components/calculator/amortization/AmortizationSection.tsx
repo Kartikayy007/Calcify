@@ -6,6 +6,8 @@ import { AmortizationChart } from "./AmortizationChart";
 import { ExportCsvButton } from "./ExportCsvButton";
 import type { LoanInput, Prepayment, ScheduleView } from "../../../lib/types";
 
+const EMPTY_PREPAYMENTS: Prepayment[] = [];
+
 interface AmortizationSectionProps {
   loan: LoanInput;
   prepayments?: Prepayment[];
@@ -17,7 +19,7 @@ interface AmortizationSectionProps {
 
 export function AmortizationSection({ 
   loan, 
-  prepayments = [], 
+  prepayments = EMPTY_PREPAYMENTS, 
   view, 
   page, 
   onViewChange, 

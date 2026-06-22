@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { EmiCalculator } from "./EmiCalculator";
 import { CompareModeView } from "./compare/CompareModeView";
@@ -17,6 +17,19 @@ export function CalculatorShell() {
 
   const compareActions = useCompareActions();
   const prepaymentActions = usePrepaymentActions();
+
+  const onLoanChange = useCallback(
+    (loan: typeof state.loan) => dispatchWorkspace({ type: "SET_LOAN", loan }),
+    [dispatchWorkspace],
+  );
+  const onScheduleViewChange = useCallback(
+    (view: typeof state.scheduleView) => dispatchWorkspace({ type: "SET_SCHEDULE_VIEW", view }),
+    [dispatchWorkspace],
+  );
+  const onSchedulePageChange = useCallback(
+    (page: number) => dispatchWorkspace({ type: "SET_SCHEDULE_PAGE", page }),
+    [dispatchWorkspace],
+  );
 
   useEffect(() => {
     if (isFirstMount.current) {
@@ -38,11 +51,11 @@ export function CalculatorShell() {
       {state.mode === "single" && (
         <EmiCalculator 
           loan={state.loan} 
-          onLoanChange={(loan) => dispatchWorkspace({ type: "SET_LOAN", loan })} 
+          onLoanChange={onLoanChange} 
           scheduleView={state.scheduleView}
           schedulePage={state.schedulePage}
-          onScheduleViewChange={(view) => dispatchWorkspace({ type: "SET_SCHEDULE_VIEW", view })}
-          onSchedulePageChange={(page) => dispatchWorkspace({ type: "SET_SCHEDULE_PAGE", page })}
+          onScheduleViewChange={onScheduleViewChange}
+          onSchedulePageChange={onSchedulePageChange}
         />
       )}
       {state.mode === "compare" && (
@@ -58,8 +71,8 @@ export function CalculatorShell() {
           prepayments={state.prepayments}
           scheduleView={state.scheduleView}
           schedulePage={state.schedulePage}
-          onScheduleViewChange={(view) => dispatchWorkspace({ type: "SET_SCHEDULE_VIEW", view })}
-          onSchedulePageChange={(page) => dispatchWorkspace({ type: "SET_SCHEDULE_PAGE", page })}
+          onScheduleViewChange={onScheduleViewChange}
+          onSchedulePageChange={onSchedulePageChange}
           {...prepaymentActions}
         />
       )}

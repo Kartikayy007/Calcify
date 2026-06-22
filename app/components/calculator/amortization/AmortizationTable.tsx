@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { formatCurrency } from "../../../lib/format";
 import type { ScheduleRow } from "../../../lib/types";
 
@@ -10,7 +11,7 @@ interface AmortizationTableProps {
   onPageChange: (page: number) => void;
 }
 
-export function AmortizationTable({ rows, breakEvenMonth, page, onPageChange }: AmortizationTableProps) {
+export const AmortizationTable = memo(function AmortizationTable({ rows, breakEvenMonth, page, onPageChange }: AmortizationTableProps) {
   const totalPages = Math.ceil(rows.length / ROWS_PER_PAGE);
   const start = page * ROWS_PER_PAGE;
   const pageRows = rows.slice(start, start + ROWS_PER_PAGE);
@@ -102,4 +103,4 @@ export function AmortizationTable({ rows, breakEvenMonth, page, onPageChange }: 
       </div>
     </div>
   );
-}
+});

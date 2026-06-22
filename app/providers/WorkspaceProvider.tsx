@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { useSharedWorkspace } from "../hooks/useSharedWorkspace";
 import type { WorkspaceAction } from "../lib/workspace";
 import type { WorkspaceState } from "../lib/types";
@@ -17,9 +17,14 @@ interface WorkspaceContextType {
 const WorkspaceContext = createContext<WorkspaceContextType | null>(null);
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
-  const workspace = useSharedWorkspace();
+  const { state, dispatchWorkspace, dispatchLocal, tabLabel, activeTabs, isConnected } = useSharedWorkspace();
 
-  return <WorkspaceContext.Provider value={workspace}>{children}</WorkspaceContext.Provider>;
+  const value = useMemo(
+    () => ({ state, dispatchWorkspace, dispatchLocal, tabLabel, activeTabs, isConnected }),
+    [state, dispatchWorkspace, dispatchLocal, tabLabel, activeTabs, isConnected],
+  );
+
+  return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>;
 }
 
 export function useWorkspace() {

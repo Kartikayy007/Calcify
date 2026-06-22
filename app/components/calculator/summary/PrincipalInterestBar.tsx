@@ -1,7 +1,8 @@
+import { memo } from "react";
 import { formatCurrency } from "../../../lib/format";
 import type { LoanSummary } from "../../../lib/types";
 
-export function PrincipalInterestBar({ summary, principal }: { summary: LoanSummary; principal: number }) {
+export const PrincipalInterestBar = memo(function PrincipalInterestBar({ summary, principal }: { summary: LoanSummary; principal: number }) {
   return (
     <div className="clay-card p-4 rounded-[1.5rem] flex flex-col gap-4 w-full">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 w-full">
@@ -39,4 +40,4 @@ export function PrincipalInterestBar({ summary, principal }: { summary: LoanSumm
       </div>
     </div>
   );
-}
+});

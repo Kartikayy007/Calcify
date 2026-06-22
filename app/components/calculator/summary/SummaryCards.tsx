@@ -1,8 +1,9 @@
+import { memo } from "react";
 import NumberFlow from "@number-flow/react";
 import { formatCurrency } from "../../../lib/format";
 import type { LoanSummary } from "../../../lib/types";
 
-export function SummaryCards({ summary }: { summary: LoanSummary }) {
+export const SummaryCards = memo(function SummaryCards({ summary }: { summary: LoanSummary }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div className="clay-card p-4 rounded-2xl flex flex-col justify-center items-start">
@@ -37,4 +38,4 @@ export function SummaryCards({ summary }: { summary: LoanSummary }) {
       </div>
     </div>
   );
-}
+});

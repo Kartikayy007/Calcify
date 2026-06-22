@@ -1,8 +1,8 @@
-import React from "react";
+import React, { memo } from "react";
 import { formatCurrency, formatTenureLabel, formatPercent } from "../../../lib/format";
 import type { SensitivityGrid } from "../../../lib/types";
 
-export function SensitivityTable({ grid }: { grid: SensitivityGrid }) {
+export const SensitivityTable = memo(function SensitivityTable({ grid }: { grid: SensitivityGrid }) {
   return (
     <div className="clay-card p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-[2rem] w-full flex flex-col">
       <div className="mb-4">
@@ -51,4 +51,4 @@ export function SensitivityTable({ grid }: { grid: SensitivityGrid }) {
       </div>
     </div>
   );
-}
+});
