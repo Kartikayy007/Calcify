@@ -3,8 +3,10 @@
 import { useState, useRef } from "react";
 import { EmiCalculator } from "./EmiCalculator";
 import { CompareModeView } from "./compare/CompareModeView";
+import { PrepaymentModeView } from "./prepayment/PrepaymentModeView";
 import { DEFAULT_LOAN, DEFAULT_SCENARIOS, DEFAULT_ACTIVE_SCENARIO_ID, updateScenarioField } from "../../lib/compare";
-import type { LoanInput, ComparisonScenario } from "../../lib/types";
+import { addPrepayment, updatePrepayment, removePrepayment, sanitizePrepayments, createPrepayment } from "../../lib/prepayment";
+import type { LoanInput, ComparisonScenario, Prepayment } from "../../lib/types";
 
 interface CalculatorShellProps {
   tab: string;
@@ -14,6 +16,7 @@ export function CalculatorShell({ tab }: CalculatorShellProps) {
   const [loan, setLoan] = useState<LoanInput>(DEFAULT_LOAN);
   const [scenarios, setScenarios] = useState<ComparisonScenario[]>(DEFAULT_SCENARIOS);
   const [activeScenarioId, setActiveScenarioId] = useState<string>(DEFAULT_ACTIVE_SCENARIO_ID);
+  const [prepayments, setPrepayments] = useState<Prepayment[]>([]);
 
   const prevTab = useRef(tab);
   if (prevTab.current === "compare" && tab === "single") {
@@ -21,6 +24,11 @@ export function CalculatorShell({ tab }: CalculatorShellProps) {
     setLoan(active.input);
   }
   prevTab.current = tab;
+
+  const handleLoanChange = (next: LoanInput) => {
+    setLoan(next);
+    setPrepayments(prev => sanitizePrepayments(prev, next.tenureMonths));
+  };
 
   const handleScenarioChange = (id: string, field: keyof LoanInput, value: number) => {
     setScenarios(prev => updateScenarioField(prev, id, field, value));
@@ -51,9 +59,21 @@ export function CalculatorShell({ tab }: CalculatorShellProps) {
     });
   };
 
+  const handleAddPrepayment = () => {
+    setPrepayments(prev => addPrepayment(prev, createPrepayment(Math.min(12, loan.tenureMonths)), loan.tenureMonths));
+  };
+  
+  const handleUpdatePrepayment = (id: string, patch: Partial<Prepayment>) => {
+    setPrepayments(prev => updatePrepayment(prev, id, patch, loan.tenureMonths));
+  };
+
+  const handleRemovePrepayment = (id: string) => {
+    setPrepayments(prev => removePrepayment(prev, id));
+  };
+
   return (
     <>
-      {tab === "single" && <EmiCalculator loan={loan} onLoanChange={setLoan} />}
+      {tab === "single" && <EmiCalculator loan={loan} onLoanChange={handleLoanChange} />}
       {tab === "compare" && (
         <CompareModeView
           scenarios={scenarios}
@@ -65,10 +85,14 @@ export function CalculatorShell({ tab }: CalculatorShellProps) {
         />
       )}
       {tab === "prepayment" && (
-        <div className="clay-card p-12 rounded-[2rem] w-full text-center flex flex-col items-center justify-center min-h-[400px]">
-          <h2 className="text-3xl font-extrabold text-foreground mb-4">Prepayment Analysis</h2>
-          <p className="text-muted-foreground text-lg">Analyze how extra payments affect your loan tenure. Coming soon.</p>
-        </div>
+        <PrepaymentModeView
+          loan={loan}
+          onLoanChange={handleLoanChange}
+          prepayments={prepayments}
+          onAddPrepayment={handleAddPrepayment}
+          onUpdatePrepayment={handleUpdatePrepayment}
+          onRemovePrepayment={handleRemovePrepayment}
+        />
       )}
     </>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -39,6 +39,15 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
 }
 
 export function AmortizationChart({ rows }: AmortizationChartProps) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const chartData = useMemo(() => {
     return rows.map((row) => ({
       month: row.month,
@@ -48,9 +57,9 @@ export function AmortizationChart({ rows }: AmortizationChartProps) {
   }, [rows]);
 
   return (
-    <div className="w-full h-[360px]">
+    <div className="w-full h-[280px] sm:h-[320px] md:h-[360px]">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} barSize={rows.length > 24 ? 6 : 12} margin={{ top: 4, right: 8, left: 8, bottom: 4 }}>
+        <BarChart data={chartData} barSize={rows.length > 36 && isMobile ? 4 : rows.length > 24 ? 6 : 12} margin={{ top: 4, right: 8, left: 0, bottom: 4 }}>
           <XAxis
             dataKey="month"
             tick={{ fontSize: 11, fontWeight: 600, fill: "currentColor" }}
@@ -63,7 +72,7 @@ export function AmortizationChart({ rows }: AmortizationChartProps) {
             tick={{ fontSize: 11, fontWeight: 600, fill: "currentColor" }}
             tickLine={false}
             axisLine={false}
-            width={60}
+            width={isMobile ? 44 : 60}
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(0,0,0,0.04)" }} />
           <Legend

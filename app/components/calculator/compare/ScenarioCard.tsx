@@ -32,7 +32,7 @@ export function ScenarioCard({ scenario, summary, isBest, isActive, onFocus, onI
               e.stopPropagation();
               onDelete();
             }}
-            className="w-8 h-8 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/5 text-muted-foreground hover:bg-rose-500 hover:text-white transition-colors"
+            className="w-10 h-10 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/5 text-muted-foreground hover:bg-rose-500 hover:text-white transition-colors"
             title="Delete scenario"
           >
             ✕

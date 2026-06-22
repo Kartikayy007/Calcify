@@ -46,7 +46,7 @@ export function CompareModeView({ scenarios, activeScenarioId, onScenarioChange,
   return (
     <div className="flex flex-col gap-6 w-full">
       <div className="px-2">
-        <h2 className="text-3xl font-extrabold text-foreground mb-2">Compare Loans</h2>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground mb-2">Compare Loans</h2>
         <p className="text-muted-foreground font-semibold">See how tenure and rate affect total cost.</p>
       </div>
 

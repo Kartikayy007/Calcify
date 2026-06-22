@@ -6,13 +6,14 @@ export function SensitivityTable({ grid }: { grid: SensitivityGrid }) {
   return (
     <div className="clay-card p-6 md:p-8 rounded-[2rem] w-full flex flex-col">
       <div className="mb-4">
-        <h2 className="text-3xl font-extrabold text-foreground mb-2">Sensitivity Analysis</h2>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground mb-2">Sensitivity Analysis</h2>
         <p className="text-muted-foreground font-semibold">
           EMI across rate × tenure — current values highlighted.
         </p>
       </div>
 
-      <div className="w-full overflow-x-auto pb-2 custom-scrollbar">
+      <div className="w-full overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 pb-2 [scrollbar-width:thin]">
+        <p className="text-xs text-muted-foreground md:hidden mb-2 font-medium">Swipe table to see more →</p>
         <div className="min-w-[500px] flex flex-col">
           <div className="grid" style={{ gridTemplateColumns: `100px repeat(${grid.rates.length}, 1fr)` }}>
             <div className="p-3 border-b border-r border-black/10 dark:border-white/10"></div>

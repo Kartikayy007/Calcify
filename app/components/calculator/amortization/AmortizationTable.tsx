@@ -24,7 +24,8 @@ export function AmortizationTable({ rows, breakEvenMonth, page, onPageChange }: 
         </div>
       )}
 
-      <div className="w-full overflow-x-auto pb-2">
+      <div className="w-full overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 pb-2 [scrollbar-width:thin]">
+        <p className="text-xs text-muted-foreground md:hidden mb-2 font-medium">Swipe table to see more →</p>
         <table className="min-w-[760px] w-full border-separate border-spacing-0 text-sm">
           <thead>
             <tr>
@@ -75,25 +76,25 @@ export function AmortizationTable({ rows, breakEvenMonth, page, onPageChange }: 
         </table>
       </div>
 
-      <div className="flex items-center justify-between pt-2">
-        <span className="text-xs text-muted-foreground font-semibold">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between pt-2">
+        <span className="text-xs text-muted-foreground font-semibold text-center sm:text-left">
           Showing {start + 1}–{Math.min(start + ROWS_PER_PAGE, rows.length)} of {rows.length} months
         </span>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
           <button
             onClick={() => onPageChange(page - 1)}
             disabled={page === 0}
-            className="clay-btn px-4 py-1.5 rounded-full text-sm font-bold text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="clay-btn px-4 py-1.5 rounded-full text-sm font-bold text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-all w-full sm:w-auto"
           >
             ← Prev
           </button>
-          <span className="text-sm font-bold text-foreground/60">
+          <span className="text-sm font-bold text-foreground/60 whitespace-nowrap">
             {page + 1} / {totalPages}
           </span>
           <button
             onClick={() => onPageChange(page + 1)}
             disabled={page >= totalPages - 1}
-            className="clay-btn px-4 py-1.5 rounded-full text-sm font-bold text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="clay-btn px-4 py-1.5 rounded-full text-sm font-bold text-foreground disabled:opacity-30 disabled:cursor-not-allowed transition-all w-full sm:w-auto"
           >
             Next →
           </button>

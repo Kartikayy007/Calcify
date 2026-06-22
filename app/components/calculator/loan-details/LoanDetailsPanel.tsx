@@ -13,7 +13,7 @@ export function LoanDetailsPanel({ loan, onLoanChange }: LoanDetailsPanelProps) 
   return (
     <div className="clay-card p-6 md:p-8 rounded-[2rem] w-full h-full flex flex-col gap-8">
       <div>
-        <h2 className="text-3xl font-extrabold text-foreground mb-2">Loan Details</h2>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground mb-2">Loan Details</h2>
         <p className="text-muted-foreground font-semibold">Adjust and watch every tab update.</p>
       </div>
 

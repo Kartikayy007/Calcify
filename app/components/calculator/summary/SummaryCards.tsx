@@ -9,7 +9,7 @@ export function SummaryCards({ summary }: { summary: LoanSummary }) {
         <h3 className="text-[10px] font-bold text-muted-foreground tracking-wider uppercase mb-1">
           Monthly EMI
         </h3>
-        <div className="text-xl lg:text-2xl font-extrabold text-emerald-500 tracking-tight flex items-center">
+        <div className="text-lg sm:text-xl lg:text-2xl font-extrabold text-emerald-500 tracking-tight flex items-center">
           <span>₹</span>
           <NumberFlow 
             value={summary.emi} 

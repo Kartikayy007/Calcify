@@ -60,11 +60,11 @@ export function NumberSliderField({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
         <label className="text-sm font-bold text-foreground tracking-wider uppercase">
           {label}
         </label>
-        <div className="flex items-center relative w-1/2 max-w-[150px]">
+        <div className="flex items-center relative w-full sm:w-1/2 sm:max-w-[150px]">
           {prefix && <span className="absolute left-3 text-lg font-bold text-foreground">{prefix}</span>}
           <input
             type="number"
@@ -72,9 +72,9 @@ export function NumberSliderField({
             onChange={(e) => setLocalValue(e.target.value)}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className={`w-full bg-transparent border-b-2 border-foreground/20 focus:border-emerald-500 transition-colors text-right text-2xl font-bold text-foreground py-1 outline-none ${prefix ? 'pl-8' : ''} ${suffix ? 'pr-8' : ''} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+            className={`w-full bg-transparent border-b-2 border-foreground/20 focus:border-emerald-500 transition-colors text-right text-xl sm:text-2xl font-bold text-foreground py-1 outline-none ${prefix ? 'pl-8' : ''} ${suffix ? 'pr-8' : ''} [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
           />
-          {suffix && <span className="absolute right-0 text-xl font-bold text-foreground">{suffix}</span>}
+          {suffix && <span className="absolute right-0 text-lg sm:text-xl font-bold text-foreground">{suffix}</span>}
         </div>
       </div>
 

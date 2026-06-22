@@ -4,27 +4,28 @@ import { useState, useEffect } from "react";
 import { useAmortization } from "../../../hooks/useAmortization";
 import { AmortizationTable } from "./AmortizationTable";
 import { AmortizationChart } from "./AmortizationChart";
-import type { LoanInput, ScheduleView } from "../../../lib/types";
+import type { LoanInput, ScheduleView, Prepayment } from "../../../lib/types";
 
 interface AmortizationSectionProps {
   loan: LoanInput;
+  prepayments?: Prepayment[];
 }
 
-export function AmortizationSection({ loan }: AmortizationSectionProps) {
-  const { rows, breakEvenMonth } = useAmortization(loan);
+export function AmortizationSection({ loan, prepayments = [] }: AmortizationSectionProps) {
+  const { rows, breakEvenMonth } = useAmortization(loan, prepayments);
   const [view, setView] = useState<ScheduleView>("table");
   const [page, setPage] = useState(0);
 
   useEffect(() => {
     setPage(0);
-  }, [loan.amount, loan.annualRate, loan.tenureMonths]);
+  }, [loan.amount, loan.annualRate, loan.tenureMonths, prepayments]);
 
   return (
     <div className="clay-card p-6 md:p-8 rounded-[2rem] w-full flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-extrabold text-foreground mb-1">Amortization Schedule</h2>
-          <p className="text-muted-foreground font-semibold">Month-by-month principal &amp; interest breakdown</p>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground mb-1">Amortization Schedule</h2>
+          <p className="text-muted-foreground font-semibold text-sm sm:text-base">Month-by-month principal &amp; interest breakdown</p>
         </div>
 
         <div className="flex items-center gap-4 flex-wrap">
