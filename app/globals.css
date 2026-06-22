@@ -3,24 +3,74 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --clay-bg: rgba(250, 249, 246, 0.85);
+  --clay-shadow-outer: rgba(200, 195, 190, 0.6);
+  --clay-light-outer: rgba(255, 255, 255, 0.8);
+  --clay-shadow-inner: rgba(200, 195, 190, 0.3);
+  --clay-light-inner: rgba(255, 255, 255, 0.9);
+  --clay-border: rgba(255, 255, 255, 0.6);
+  --muted-foreground: #71717a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-muted-foreground: var(--muted-foreground);
+  --font-sans: var(--font-poppins);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    @apply font-sans;
+  }
+
+  .clay-card {
+    background-color: var(--clay-bg);
+    box-shadow: 
+      12px 12px 24px var(--clay-shadow-outer),
+      -12px -12px 24px var(--clay-light-outer),
+      inset 2px 2px 4px var(--clay-light-inner),
+      inset -2px -2px 4px var(--clay-shadow-inner);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .clay-btn {
+    background-color: var(--clay-bg);
+    box-shadow: 
+      4px 4px 10px var(--clay-shadow-outer),
+      -4px -4px 10px var(--clay-light-outer),
+      inset 2px 2px 4px var(--clay-light-inner),
+      inset -2px -2px 4px var(--clay-shadow-inner);
+  }
+
+  .clay-btn:active {
+    box-shadow: 
+      inset 3px 3px 6px var(--clay-shadow-inner),
+      inset -3px -3px 6px var(--clay-light-inner);
+  }
+
+  .clay-pill {
+    background-color: var(--clay-bg);
+    box-shadow: 
+      inset 3px 3px 6px var(--clay-shadow-inner),
+      inset -3px -3px 6px var(--clay-light-inner);
   }
 }
 
+.dark {
+    --background: #1e1e1e;
+    --foreground: #ededed;
+    --clay-bg: rgba(30, 30, 30, 0.85);
+    --clay-shadow-outer: rgba(0, 0, 0, 0.6);
+    --clay-light-outer: rgba(0, 0, 0, 0.0);
+    --clay-shadow-inner: rgba(0, 0, 0, 0.8);
+    --clay-light-inner: rgba(60, 60, 60, 0.6);
+    --clay-border: rgba(60, 60, 60, 0.5);
+    --muted-foreground: #a1a1aa;
+  }
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }

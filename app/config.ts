@@ -3,8 +3,8 @@ import { AppConfig } from "./types";
 export const CONFIG: AppConfig = {
   preloader: {
     colors: {
-      frontLayer: "#0F172A",
-      curtains: ["#F5090D", "#FBD306", "#31F689", "#82F2EB"],
+      frontLayer: "#171717",
+      curtains: ["#7286C9", "#61CA97", "#10b981"],
     },
     timing: {
       waitTimeMs: 3000,
