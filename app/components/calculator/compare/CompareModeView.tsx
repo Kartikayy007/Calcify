@@ -1,7 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useCallback } from "react";
 import type { ComparisonScenario, LoanInput } from "../../../lib/types";
 import { useCompareAnalysis } from "../../../hooks/compare/useCompareAnalysis";
 import { ScenarioCard } from "./ScenarioCard";
+import { CompareScrollHint } from "./CompareScrollHint";
+import { AddScenarioCard } from "./AddScenarioCard";
 
 interface CompareModeViewProps {
   scenarios: ComparisonScenario[];
@@ -15,32 +17,18 @@ interface CompareModeViewProps {
 export function CompareModeView({ scenarios, activeScenarioId, onScenarioChange, onScenarioFocus, onAddScenario, onDeleteScenario }: CompareModeViewProps) {
   const { items, bestId } = useCompareAnalysis(scenarios);
   const [showIndicator, setShowIndicator] = useState(false);
-  const scrollTimeout = useRef<NodeJS.Timeout>(null);
-  const showIndicatorRef = useRef(false);
-  showIndicatorRef.current = showIndicator;
 
   const handleAddClick = () => {
     if (onAddScenario) {
       onAddScenario();
       if (scenarios.length >= 2) {
         setShowIndicator(true);
-        if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-        scrollTimeout.current = setTimeout(() => {
-          setShowIndicator(false);
-        }, 2000);
       }
     }
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (showIndicatorRef.current) {
-        setShowIndicator(false);
-        if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+  const handleDismissIndicator = useCallback(() => {
+    setShowIndicator(false);
   }, []);
 
   return (
@@ -63,28 +51,12 @@ export function CompareModeView({ scenarios, activeScenarioId, onScenarioChange,
             onDelete={scenarios.length > 1 && onDeleteScenario ? () => onDeleteScenario(scenario.id) : undefined}
           />
         ))}
-        {onAddScenario && scenarios.length < 6 && (
-          <div
-            key="add-scenario-btn"
-            onClick={handleAddClick}
-            className="h-full mt-4 p-5 rounded-3xl flex flex-col items-center justify-center cursor-pointer bg-black/5 dark:bg-transparent hover:bg-black/10 dark:hover:bg-white/5 transition-all duration-300 border-[3px] border-dashed border-black/20 dark:border-white/10 group"
-          >
-            <div className="w-14 h-14 rounded-full clay-btn flex items-center justify-center text-2xl text-foreground mb-4 group-hover:scale-110 transition-transform">
-              +
-            </div>
-            <p className="font-bold text-muted-foreground group-hover:text-foreground transition-colors">Add Scenario</p>
-          </div>
+        {onAddScenario && scenarios.length < 3 && (
+          <AddScenarioCard key="add-scenario-btn" onClick={handleAddClick} />
         )}
       </div>
 
-      <div className={`fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${showIndicator ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'}`}>
-        <div 
-          className="w-12 h-12 rounded-full clay-btn flex items-center justify-center text-foreground cursor-pointer shadow-xl shadow-black/20"
-          onClick={() => window.scrollBy({ top: 300, behavior: 'smooth' })}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
-        </div>
-      </div>
+      <CompareScrollHint show={showIndicator} onDismiss={handleDismissIndicator} />
     </div>
   );
 }

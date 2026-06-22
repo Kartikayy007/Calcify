@@ -3,7 +3,7 @@
 import { NavbarLogo } from "./NavbarLogo";
 import { NavbarTabs } from "./NavbarTabs";
 import { NavbarActions } from "./NavbarActions";
-import { Suspense, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
@@ -34,9 +34,7 @@ export function Navbar() {
           <span className="font-extrabold text-lg sm:text-xl tracking-tight text-foreground/90">Calcify</span>
         </div>
 
-        <Suspense fallback={<div className="hidden md:flex w-[402px] h-[36px]"></div>}>
-          <NavbarTabs />
-        </Suspense>
+        <NavbarTabs />
 
         <NavbarActions />
       </nav>

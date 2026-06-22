@@ -1,42 +1,49 @@
 "use client";
 
-import Link from "next/link";
-import { useSearchParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useWorkspace } from "../../providers/WorkspaceProvider";
+import type { WorkspaceMode } from "../../lib/types";
 
 export function NavbarTabs() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const { state, dispatchWorkspace } = useWorkspace();
   
   if (pathname !== "/") return null;
 
-  const tab = searchParams.get("tab") || "single";
+  const tab = state.mode;
+
+  const setMode = (mode: WorkspaceMode) => {
+    dispatchWorkspace({ type: "SET_MODE", mode });
+  };
 
   return (
-    <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center p-1.5 rounded-full clay-pill">
-      <div 
-        className="absolute top-1.5 bottom-1.5 w-[130px] clay-btn rounded-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] z-0" 
-        style={{ 
-          transform: `translateX(${tab === 'single' ? 0 : tab === 'compare' ? 130 : 260}px)` 
-        }} 
-      />
-      <Link 
-        href="/?tab=single" 
-        className={`relative z-10 w-[130px] text-center py-2 text-sm font-bold rounded-full transition-colors duration-300 ${tab === "single" ? "text-emerald-500" : "text-muted-foreground hover:text-foreground"}`}
+    <div className="hidden md:flex lg:absolute lg:left-1/2 lg:-translate-x-1/2 items-center p-1.5 rounded-full clay-pill mx-1 lg:mx-0 w-[280px] lg:w-[390px] shrink-0 relative">
+      <div className="absolute inset-y-1.5 left-1.5 right-1.5 z-0 flex">
+        <div 
+          className="h-full w-1/3 clay-btn rounded-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]" 
+          style={{ 
+            transform: `translateX(${tab === 'single' ? '0%' : tab === 'compare' ? '100%' : '200%'})` 
+          }} 
+        />
+      </div>
+      <button 
+        onClick={() => setMode("single")}
+        className={`relative z-10 flex-1 text-center py-1.5 lg:py-2 text-[11px] lg:text-sm font-bold rounded-full transition-colors duration-300 ${tab === "single" ? "text-emerald-500" : "text-muted-foreground hover:text-foreground"}`}
       >
         Single Mode
-      </Link>
-      <Link 
-        href="/?tab=compare" 
-        className={`relative z-10 w-[130px] text-center py-2 text-sm font-bold rounded-full transition-colors duration-300 ${tab === "compare" ? "text-emerald-500" : "text-muted-foreground hover:text-foreground"}`}
+      </button>
+      <button 
+        onClick={() => setMode("compare")}
+        className={`relative z-10 flex-1 text-center py-1.5 lg:py-2 text-[11px] lg:text-sm font-bold rounded-full transition-colors duration-300 ${tab === "compare" ? "text-emerald-500" : "text-muted-foreground hover:text-foreground"}`}
       >
         Compare Mode
-      </Link>
-      <Link 
-        href="/?tab=prepayment" 
-        className={`relative z-10 w-[130px] text-center py-2 text-sm font-bold rounded-full transition-colors duration-300 ${tab === "prepayment" ? "text-emerald-500" : "text-muted-foreground hover:text-foreground"}`}
+      </button>
+      <button 
+        onClick={() => setMode("prepayment")}
+        className={`relative z-10 flex-1 text-center py-1.5 lg:py-2 text-[11px] lg:text-sm font-bold rounded-full transition-colors duration-300 ${tab === "prepayment" ? "text-emerald-500" : "text-muted-foreground hover:text-foreground"}`}
       >
         Prepayment
-      </Link>
+      </button>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import type { LoanInput, Prepayment } from "../../../lib/types";
+import type { LoanInput, Prepayment, ScheduleView } from "../../../lib/types";
 import { LoanDetailsPanel } from "../loan-details/LoanDetailsPanel";
 import { PrepaymentPlanner } from "./PrepaymentPlanner";
 import { AmortizationSection } from "../amortization/AmortizationSection";
@@ -11,6 +11,10 @@ interface PrepaymentModeViewProps {
   onAddPrepayment: () => void;
   onUpdatePrepayment: (id: string, patch: Partial<Prepayment>) => void;
   onRemovePrepayment: (id: string) => void;
+  scheduleView: ScheduleView;
+  schedulePage: number;
+  onScheduleViewChange: (view: ScheduleView) => void;
+  onSchedulePageChange: (page: number) => void;
 }
 
 export function PrepaymentModeView({
@@ -19,24 +23,39 @@ export function PrepaymentModeView({
   prepayments,
   onAddPrepayment,
   onUpdatePrepayment,
-  onRemovePrepayment
+  onRemovePrepayment,
+  scheduleView,
+  schedulePage,
+  onScheduleViewChange,
+  onSchedulePageChange
 }: PrepaymentModeViewProps) {
   const impact = usePrepaymentImpact(loan, prepayments);
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <section className="grid xl:grid-cols-[minmax(320px,400px)_1fr] gap-6 items-stretch">
-        <LoanDetailsPanel loan={loan} onLoanChange={onLoanChange} />
-        <PrepaymentPlanner
-          loan={loan}
-          prepayments={prepayments}
-          impact={impact}
-          onAdd={onAddPrepayment}
-          onUpdate={onUpdatePrepayment}
-          onRemove={onRemovePrepayment}
-        />
+      <section className="grid xl:grid-cols-[minmax(320px,400px)_1fr] gap-6 items-stretch min-w-0">
+        <div className="min-w-0">
+          <LoanDetailsPanel loan={loan} onLoanChange={onLoanChange} />
+        </div>
+        <div className="min-w-0">
+          <PrepaymentPlanner
+            loan={loan}
+            prepayments={prepayments}
+            impact={impact}
+            onAdd={onAddPrepayment}
+            onUpdate={onUpdatePrepayment}
+            onRemove={onRemovePrepayment}
+          />
+        </div>
       </section>
-      <AmortizationSection loan={loan} prepayments={prepayments} />
+      <AmortizationSection 
+        loan={loan} 
+        prepayments={prepayments} 
+        view={scheduleView}
+        page={schedulePage}
+        onViewChange={onScheduleViewChange}
+        onPageChange={onSchedulePageChange}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Poppins, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Preloader from "./components/preloader/Preloader";
 import { Navbar } from "./components/navbar/Navbar";
+import { WorkspaceProvider } from "./providers/WorkspaceProvider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -32,8 +33,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Preloader />
-        <Navbar />
-        {children}
+        <WorkspaceProvider>
+          <Navbar />
+          {children}
+        </WorkspaceProvider>
       </body>
     </html>
   );

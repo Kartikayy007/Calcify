@@ -1,99 +1,69 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { EmiCalculator } from "./EmiCalculator";
 import { CompareModeView } from "./compare/CompareModeView";
 import { PrepaymentModeView } from "./prepayment/PrepaymentModeView";
-import { DEFAULT_LOAN, DEFAULT_SCENARIOS, DEFAULT_ACTIVE_SCENARIO_ID, updateScenarioField } from "../../lib/compare";
-import { addPrepayment, updatePrepayment, removePrepayment, sanitizePrepayments, createPrepayment } from "../../lib/prepayment";
-import type { LoanInput, ComparisonScenario, Prepayment } from "../../lib/types";
+import { useWorkspace } from "../../providers/WorkspaceProvider";
+import { useCompareActions } from "../../hooks/compare/useCompareActions";
+import { usePrepaymentActions } from "../../hooks/prepayment/usePrepaymentActions";
+import { encodeWorkspaceUrl } from "../../lib/url/workspaceUrl";
 
-interface CalculatorShellProps {
-  tab: string;
-}
+export function CalculatorShell() {
+  const { state, dispatchWorkspace } = useWorkspace();
+  const router = useRouter();
+  const isFirstMount = useRef(true);
 
-export function CalculatorShell({ tab }: CalculatorShellProps) {
-  const [loan, setLoan] = useState<LoanInput>(DEFAULT_LOAN);
-  const [scenarios, setScenarios] = useState<ComparisonScenario[]>(DEFAULT_SCENARIOS);
-  const [activeScenarioId, setActiveScenarioId] = useState<string>(DEFAULT_ACTIVE_SCENARIO_ID);
-  const [prepayments, setPrepayments] = useState<Prepayment[]>([]);
+  const compareActions = useCompareActions();
+  const prepaymentActions = usePrepaymentActions();
 
-  const prevTab = useRef(tab);
-  if (prevTab.current === "compare" && tab === "single") {
-    const active = scenarios.find(s => s.id === activeScenarioId) ?? scenarios[0];
-    setLoan(active.input);
-  }
-  prevTab.current = tab;
-
-  const handleLoanChange = (next: LoanInput) => {
-    setLoan(next);
-    setPrepayments(prev => sanitizePrepayments(prev, next.tenureMonths));
-  };
-
-  const handleScenarioChange = (id: string, field: keyof LoanInput, value: number) => {
-    setScenarios(prev => updateScenarioField(prev, id, field, value));
-  };
-
-  const handleAddScenario = () => {
-    const usedIds = new Set(scenarios.map(s => s.id));
-    let nextId = "A";
-    for (let i = 0; i < 26; i++) {
-      const char = String.fromCharCode(65 + i);
-      if (!usedIds.has(char)) {
-        nextId = char;
-        break;
-      }
+  useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
     }
-    const lastInput = scenarios[scenarios.length - 1].input;
-    setScenarios(prev => [...prev, { id: nextId, name: `Scenario ${nextId}`, input: { ...lastInput } }]);
-  };
 
-  const handleDeleteScenario = (id: string) => {
-    if (scenarios.length <= 1) return;
-    setScenarios(prev => {
-      const filtered = prev.filter(s => s.id !== id);
-      if (activeScenarioId === id && filtered.length > 0) {
-        setActiveScenarioId(filtered[0].id);
-      }
-      return filtered;
-    });
-  };
+    const handler = setTimeout(() => {
+      const query = encodeWorkspaceUrl(state);
+      const url = query ? `/?${query}` : "/";
+      router.replace(url, { scroll: false });
+    }, 300);
 
-  const handleAddPrepayment = () => {
-    setPrepayments(prev => addPrepayment(prev, createPrepayment(Math.min(12, loan.tenureMonths)), loan.tenureMonths));
-  };
-  
-  const handleUpdatePrepayment = (id: string, patch: Partial<Prepayment>) => {
-    setPrepayments(prev => updatePrepayment(prev, id, patch, loan.tenureMonths));
-  };
-
-  const handleRemovePrepayment = (id: string) => {
-    setPrepayments(prev => removePrepayment(prev, id));
-  };
+    return () => clearTimeout(handler);
+  }, [state.mode, state.loan, state.prepayments, router]);
 
   return (
     <>
-      {tab === "single" && <EmiCalculator loan={loan} onLoanChange={handleLoanChange} />}
-      {tab === "compare" && (
-        <CompareModeView
-          scenarios={scenarios}
-          activeScenarioId={activeScenarioId}
-          onScenarioChange={handleScenarioChange}
-          onScenarioFocus={setActiveScenarioId}
-          onAddScenario={handleAddScenario}
-          onDeleteScenario={handleDeleteScenario}
+      {state.mode === "single" && (
+        <EmiCalculator 
+          loan={state.loan} 
+          onLoanChange={(loan) => dispatchWorkspace({ type: "SET_LOAN", loan })} 
+          scheduleView={state.scheduleView}
+          schedulePage={state.schedulePage}
+          onScheduleViewChange={(view) => dispatchWorkspace({ type: "SET_SCHEDULE_VIEW", view })}
+          onSchedulePageChange={(page) => dispatchWorkspace({ type: "SET_SCHEDULE_PAGE", page })}
         />
       )}
-      {tab === "prepayment" && (
+      {state.mode === "compare" && (
+        <CompareModeView
+          scenarios={state.scenarios}
+          activeScenarioId={state.activeScenarioId}
+          {...compareActions}
+        />
+      )}
+      {state.mode === "prepayment" && (
         <PrepaymentModeView
-          loan={loan}
-          onLoanChange={handleLoanChange}
-          prepayments={prepayments}
-          onAddPrepayment={handleAddPrepayment}
-          onUpdatePrepayment={handleUpdatePrepayment}
-          onRemovePrepayment={handleRemovePrepayment}
+          loan={state.loan}
+          prepayments={state.prepayments}
+          scheduleView={state.scheduleView}
+          schedulePage={state.schedulePage}
+          onScheduleViewChange={(view) => dispatchWorkspace({ type: "SET_SCHEDULE_VIEW", view })}
+          onSchedulePageChange={(page) => dispatchWorkspace({ type: "SET_SCHEDULE_PAGE", page })}
+          {...prepaymentActions}
         />
       )}
     </>
   );
 }
+
