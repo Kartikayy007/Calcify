@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 import { useWorkspace } from "../../providers/WorkspaceProvider";
 
 export function ThemeToggle() {
@@ -18,7 +19,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <button className="clay-btn px-4 py-2 rounded-full text-sm font-semibold transition-all flex items-center gap-2 text-foreground/80 opacity-0 cursor-default">
-        🌙
+        <Moon className="w-4 h-4" />
       </button>
     );
   }
@@ -29,7 +30,7 @@ export function ThemeToggle() {
       className="clay-btn px-4 py-2 rounded-full text-sm font-semibold transition-all flex items-center gap-2 text-foreground/80 hover:text-foreground cursor-pointer"
       title="Toggle Theme"
     >
-      {state.theme === "light" ? "🌙" : "☀️"}
+      {state.theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
     </button>
   );
 }

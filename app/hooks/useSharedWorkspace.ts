@@ -76,8 +76,6 @@ export function useSharedWorkspace() {
   const lastUpdateRef = useRef({ updatedAt: 0, sourceTabId: "" });
   const stateRef = useRef(state);
   stateRef.current = state;
-  const presenceRef = useRef(presence);
-  presenceRef.current = presence;
 
   useEffect(() => {
     const tab = createTabIdentity();

@@ -2,6 +2,7 @@
 
 import { NumberSliderField } from "../../ui/NumberSliderField";
 import { LOAN_LIMITS } from "../../../lib/finance";
+import { formatTenureLabel } from "../../../lib/format";
 import type { LoanInput } from "../../../lib/types";
 import { ShareLinkButton } from "../ShareLinkButton";
 
@@ -14,9 +15,8 @@ export function LoanDetailsPanel({ loan, onLoanChange }: LoanDetailsPanelProps) 
   return (
     <div className="clay-card p-4 sm:p-6 md:p-8 rounded-[2rem] w-full h-full flex flex-col gap-6 sm:gap-8">
       <div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground mb-2">Loan Details</h2>
-        <div className="flex items-center justify-between">
-          <p className="text-muted-foreground font-semibold">Adjust and watch every tab update.</p>
+        <div className="flex items-center justify-between gap-3 mb-2">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground">Loan Details</h2>
           <ShareLinkButton />
         </div>
       </div>
@@ -56,6 +56,7 @@ export function LoanDetailsPanel({ loan, onLoanChange }: LoanDetailsPanelProps) 
           minLabel="1 mo"
           maxLabel="84 mo"
           suffix="mo"
+          hint={`≈ ${formatTenureLabel(loan.tenureMonths)}`}
         />
       </div>
     </div>

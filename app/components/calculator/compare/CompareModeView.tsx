@@ -1,8 +1,6 @@
-import { useState, useCallback } from "react";
 import type { ComparisonScenario, LoanInput } from "../../../lib/types";
 import { useCompareAnalysis } from "../../../hooks/compare/useCompareAnalysis";
 import { ScenarioCard } from "./ScenarioCard";
-import { CompareScrollHint } from "./CompareScrollHint";
 import { AddScenarioCard } from "./AddScenarioCard";
 
 interface CompareModeViewProps {
@@ -16,20 +14,6 @@ interface CompareModeViewProps {
 
 export function CompareModeView({ scenarios, activeScenarioId, onScenarioChange, onScenarioFocus, onAddScenario, onDeleteScenario }: CompareModeViewProps) {
   const { items, bestId } = useCompareAnalysis(scenarios);
-  const [showIndicator, setShowIndicator] = useState(false);
-
-  const handleAddClick = () => {
-    if (onAddScenario) {
-      onAddScenario();
-      if (scenarios.length >= 2) {
-        setShowIndicator(true);
-      }
-    }
-  };
-
-  const handleDismissIndicator = useCallback(() => {
-    setShowIndicator(false);
-  }, []);
 
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -52,11 +36,9 @@ export function CompareModeView({ scenarios, activeScenarioId, onScenarioChange,
           />
         ))}
         {onAddScenario && scenarios.length < 3 && (
-          <AddScenarioCard key="add-scenario-btn" onClick={handleAddClick} />
+          <AddScenarioCard key="add-scenario-btn" onClick={onAddScenario} />
         )}
       </div>
-
-      <CompareScrollHint show={showIndicator} onDismiss={handleDismissIndicator} />
     </div>
   );
 }

@@ -17,7 +17,7 @@ export function NavbarTabs() {
   };
 
   return (
-    <div className="hidden md:flex lg:absolute lg:left-1/2 lg:-translate-x-1/2 items-center p-1.5 rounded-full clay-pill mx-1 lg:mx-0 w-[280px] lg:w-[390px] shrink-0 relative">
+    <div className="hidden md:flex items-center p-1.5 rounded-full clay-pill w-[280px] lg:w-[390px] shrink-0 relative">
       <div className="absolute inset-y-1.5 left-1.5 right-1.5 z-0 flex">
         <div 
           className="h-full w-1/3 clay-btn rounded-full transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]" 

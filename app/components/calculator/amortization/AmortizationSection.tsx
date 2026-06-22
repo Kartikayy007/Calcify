@@ -33,7 +33,7 @@ export function AmortizationSection({
           <p className="text-muted-foreground font-semibold text-sm sm:text-base">Month-by-month principal &amp; interest breakdown</p>
         </div>
 
-        <div className="flex items-center gap-4 flex-wrap">
+        <div className="flex items-center gap-4 flex-wrap w-full sm:w-auto justify-between sm:justify-start">
           <ExportCsvButton rows={rows} />
           <div className="flex items-center p-1.5 rounded-full clay-pill relative">
             <div
