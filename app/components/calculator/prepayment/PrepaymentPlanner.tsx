@@ -30,7 +30,7 @@ export function PrepaymentPlanner({ prepayments, loan, impact, onAdd, onUpdate, 
       <div className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h3 className="font-bold text-foreground">Scheduled Prepayments</h3>
-          <AddPrepaymentButton onClick={onAdd} />
+          <AddPrepaymentButton onClick={onAdd} disabled={prepayments.length >= loan.tenureMonths} />
         </div>
         <PrepaymentList
           prepayments={prepayments}

@@ -84,12 +84,19 @@ export function workspaceReducer(state: WorkspaceState, action: WorkspaceAction)
       });
     }
 
-    case "ADD_PREPAYMENT":
+    case "ADD_PREPAYMENT": {
+      if (state.prepayments.length >= state.loan.tenureMonths) return state;
+
+      const used = new Set(state.prepayments.map((p) => p.month));
+      let month = 1;
+      while (month < state.loan.tenureMonths && used.has(month)) month++;
+
       return sanitizeWorkspaceState({
         ...state,
-        prepayments: [...state.prepayments, action.prepayment ?? createPrepayment(Math.min(state.loan.tenureMonths, 12))],
+        prepayments: [...state.prepayments, action.prepayment ?? createPrepayment(month)],
         schedulePage: 0,
       });
+    }
 
     case "REMOVE_PREPAYMENT":
       return sanitizeWorkspaceState({

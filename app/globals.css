@@ -10,6 +10,8 @@
   --clay-light-inner: rgba(255, 255, 255, 0.9);
   --clay-border: rgba(255, 255, 255, 0.6);
   --muted-foreground: #71717a;
+  --clay-track: rgba(0, 0, 0, 0.1);
+  --clay-thumb: #faf9f6;
 }
 
 @theme inline {
@@ -69,6 +71,8 @@
     --clay-light-inner: rgba(60, 60, 60, 0.6);
     --clay-border: rgba(60, 60, 60, 0.5);
     --muted-foreground: #a1a1aa;
+    --clay-track: rgba(255, 255, 255, 0.1);
+    --clay-thumb: #2a2a2a;
   }
 body {
   background: var(--background);
@@ -82,4 +86,52 @@ body {
 
 .animate-pop-in {
   animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.clay-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 9999px;
+  outline: none;
+  cursor: pointer;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.clay-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background-color: var(--clay-thumb);
+  border: 2px solid #10b981;
+  box-shadow:
+    3px 3px 8px var(--clay-shadow-outer),
+    -3px -3px 8px var(--clay-light-outer);
+  transition: transform 0.15s ease;
+}
+
+.clay-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.clay-slider::-webkit-slider-thumb:active {
+  transform: scale(1.05);
+}
+
+.clay-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background-color: var(--clay-thumb);
+  border: 2px solid #10b981;
+  box-shadow:
+    3px 3px 8px var(--clay-shadow-outer),
+    -3px -3px 8px var(--clay-light-outer);
+  transition: transform 0.15s ease;
+}
+
+.clay-slider::-moz-range-thumb:hover {
+  transform: scale(1.15);
 }

@@ -8,7 +8,7 @@ export function SensitivityTable({ grid }: { grid: SensitivityGrid }) {
       <div className="mb-4">
         <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground mb-2">Sensitivity Analysis</h2>
         <p className="text-muted-foreground font-semibold">
-          EMI across rate × tenure — current values highlighted.
+          EMI across rate × tenure = current values highlighted.
         </p>
       </div>
 

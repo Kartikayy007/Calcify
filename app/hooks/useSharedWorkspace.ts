@@ -70,7 +70,17 @@ function createTabIdentity() {
 export function useSharedWorkspace() {
   const [tabId, setTabId] = useState("");
   const [tabLabel, setTabLabel] = useState("Tab ...");
-  const [state, setState] = useState<WorkspaceState>(defaultWorkspaceState);
+  const [state, setState] = useState<WorkspaceState>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("emi-theme");
+        if (stored === "dark" || stored === "light") {
+          return { ...defaultWorkspaceState, theme: stored };
+        }
+      } catch {}
+    }
+    return defaultWorkspaceState;
+  });
   const [presence, setPresence] = useState<Record<string, PresenceEntry>>({});
   const channelRef = useRef<BroadcastChannel | null>(null);
   const lastUpdateRef = useRef({ updatedAt: 0, sourceTabId: "" });
@@ -102,6 +112,9 @@ export function useSharedWorkspace() {
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", state.theme === "dark");
+    try {
+      localStorage.setItem("emi-theme", state.theme);
+    } catch {}
   }, [state.theme]);
 
   useEffect(() => {

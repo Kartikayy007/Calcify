@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { clamp, roundTo } from "../../lib/finance";
+import { Slider } from "./Slider";
 
 interface NumberSliderFieldProps {
   label: string;
@@ -70,7 +71,7 @@ export function NumberSliderField({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
-        <label className="text-sm font-bold text-foreground tracking-wider uppercase flex items-center gap-2">
+        <label className="text-sm font-bold text-foreground tracking-wider uppercase flex items-center gap-2 flex-wrap">
           {label}
           {hint && (
             <span className="text-xs font-semibold text-muted-foreground normal-case tracking-normal">
@@ -94,15 +95,7 @@ export function NumberSliderField({
       </div>
 
       <div className="relative pt-2 pb-1">
-        <input
-          type="range"
-          min={min}
-          max={max}
-          step={step}
-          value={value}
-          onChange={(e) => onChange(parseFloat(e.target.value))}
-          className="w-full h-2 bg-black/10 dark:bg-white/10 rounded-full appearance-none cursor-pointer accent-emerald-500 outline-none shadow-[inset_1px_1px_3px_rgba(0,0,0,0.2)]"
-        />
+        <Slider min={min} max={max} step={step} value={value} onChange={onChange} />
         <div className="flex justify-between text-xs font-semibold text-muted-foreground mt-2">
           <span>{displayMinLabel}</span>
           <span>{displayMaxLabel}</span>
