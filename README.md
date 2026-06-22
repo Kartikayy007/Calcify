@@ -41,6 +41,7 @@ Open [http://localhost:3000](http://localhost:3000). Requires Node.js 18+.
 - UI actions → `dispatchWorkspace` → reducer → posts to `BroadcastChannel`.
 - Remote tabs hydrate via `HYDRATE_REMOTE_STATE`. Last-write-wins on conflicts.
 - Presence: 2s heartbeat, 5s stale prune.
+- **Source of truth (leaderless)**: a new tab posts `request_state` on mount; any existing tab replies with `state_offer`, so the new tab adopts the current workspace instead of defaults. Since every tab can answer, there is no single leader to lose — closing tabs never breaks hydration.
 
 ```text
 app/
@@ -58,7 +59,7 @@ app/
 
 | Bonus | Status |
 | :--- | :--- |
-| Tab leadership | Done |
+| Tab leadership (leaderless source of truth) | Done |
 | CSV export | Done |
 | URL state encoding | Done |
 
