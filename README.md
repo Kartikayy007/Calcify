@@ -2,7 +2,7 @@
 
 Loan EMI calculator where multiple browser tabs share state in real-time via `BroadcastChannel` no backend, no polling.
 
-**Live**: [calcify-alpha.vercel.app](https://calcify-alpha.vercel.app/) · **Repo**: [github.com/kartikay/calcify](https://github.com/kartikay/calcify)
+**Live**: [calcify-alpha.vercel.app](https://calcify-alpha.vercel.app/)
 
 ## Features
 
