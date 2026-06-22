@@ -63,7 +63,7 @@ export function CompareModeView({ scenarios, activeScenarioId, onScenarioChange,
             onDelete={scenarios.length > 1 && onDeleteScenario ? () => onDeleteScenario(scenario.id) : undefined}
           />
         ))}
-        {onAddScenario && scenarios.length < 3 && (
+        {onAddScenario && scenarios.length < 6 && (
           <div
             key="add-scenario-btn"
             onClick={handleAddClick}
