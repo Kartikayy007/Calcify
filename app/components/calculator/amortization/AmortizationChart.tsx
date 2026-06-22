@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   BarChart,
   Bar,
@@ -38,16 +39,18 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
 }
 
 export function AmortizationChart({ rows }: AmortizationChartProps) {
-  const data = rows.map((row) => ({
-    month: row.month,
-    Principal: Math.round(row.principalPaid + row.prepaymentApplied),
-    Interest: Math.round(row.interestPaid),
-  }));
+  const chartData = useMemo(() => {
+    return rows.map((row) => ({
+      month: row.month,
+      Principal: Math.round(row.principalPaid + row.prepaymentApplied),
+      Interest: Math.round(row.interestPaid),
+    }));
+  }, [rows]);
 
   return (
     <div className="w-full h-[360px]">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} barSize={rows.length > 24 ? 6 : 12} margin={{ top: 4, right: 8, left: 8, bottom: 4 }}>
+        <BarChart data={chartData} barSize={rows.length > 24 ? 6 : 12} margin={{ top: 4, right: 8, left: 8, bottom: 4 }}>
           <XAxis
             dataKey="month"
             tick={{ fontSize: 11, fontWeight: 600, fill: "currentColor" }}

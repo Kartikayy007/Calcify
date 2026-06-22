@@ -15,7 +15,9 @@ export function AmortizationSection({ loan }: AmortizationSectionProps) {
   const [view, setView] = useState<ScheduleView>("table");
   const [page, setPage] = useState(0);
 
-  useEffect(() => { setPage(0); }, [loan]);
+  useEffect(() => {
+    setPage(0);
+  }, [loan.amount, loan.annualRate, loan.tenureMonths]);
 
   return (
     <div className="clay-card p-6 md:p-8 rounded-[2rem] w-full flex flex-col gap-6">

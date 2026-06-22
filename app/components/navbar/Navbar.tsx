@@ -1,11 +1,33 @@
+"use client";
+
 import { NavbarLogo } from "./NavbarLogo";
 import { NavbarTabs } from "./NavbarTabs";
 import { NavbarActions } from "./NavbarActions";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 
 export function Navbar() {
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="fixed top-4 left-0 w-full z-40 px-4 md:px-6 flex justify-center pointer-events-none">
+    <div className={`fixed left-0 w-full z-40 px-4 md:px-6 flex justify-center pointer-events-none transition-all duration-500 ease-in-out ${isVisible ? 'top-4 translate-y-0 opacity-100' : '-translate-y-[150%] opacity-0'}`}>
       <nav className="clay-card relative w-full max-w-7xl rounded-[2rem] flex items-center justify-between px-5 py-3 pointer-events-auto transition-all duration-300">
         <div className="flex items-center gap-3">
           <NavbarLogo />
