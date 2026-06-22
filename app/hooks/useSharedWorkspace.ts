@@ -260,5 +260,6 @@ export function useSharedWorkspace() {
     dispatchLocal,
     tabLabel,
     activeTabs: Object.keys(presence).length || 1,
+    isConnected: !!tabId,
   };
 }

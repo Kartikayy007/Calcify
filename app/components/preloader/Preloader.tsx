@@ -6,14 +6,34 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { CurtainLayer } from "./CurtainLayer";
 import { CONFIG } from "@/app/config";
 import { PreloaderStage } from "./types";
+import { useWorkspace } from "@/app/providers/WorkspaceProvider";
 
 export default function Preloader() {
   const [stage, setStage] = useState<PreloaderStage>("loading");
+  const { isConnected } = useWorkspace();
+  const [windowLoaded, setWindowLoaded] = useState(false);
+  const [minElapsed, setMinElapsed] = useState(false);
 
   useEffect(() => {
-    const slideOutTimer = setTimeout(() => {
-      setStage("animatingOut");
-    }, CONFIG.preloader.timing.waitTimeMs);
+    if (typeof document !== "undefined" && document.readyState === "complete") {
+      setWindowLoaded(true);
+      return;
+    }
+    const onLoad = () => setWindowLoaded(true);
+    window.addEventListener("load", onLoad);
+    return () => window.removeEventListener("load", onLoad);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMinElapsed(true), CONFIG.preloader.timing.waitTimeMs);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (stage !== "loading") return;
+    if (!(windowLoaded && isConnected && minElapsed)) return;
+
+    setStage("animatingOut");
 
     const maxDelay =
       CONFIG.preloader.colors.curtains.length * CONFIG.preloader.timing.staggerDelayMs;
@@ -22,13 +42,10 @@ export default function Preloader() {
 
     const unmountTimer = setTimeout(() => {
       setStage("hidden");
-    }, CONFIG.preloader.timing.waitTimeMs + animationDuration + maxDelay + buffer);
+    }, animationDuration + maxDelay + buffer);
 
-    return () => {
-      clearTimeout(slideOutTimer);
-      clearTimeout(unmountTimer);
-    };
-  }, []);
+    return () => clearTimeout(unmountTimer);
+  }, [stage, windowLoaded, isConnected, minElapsed]);
 
   if (stage === "hidden") return null;
 

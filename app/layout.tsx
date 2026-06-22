@@ -40,8 +40,8 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <Preloader />
         <WorkspaceProvider>
+          <Preloader />
           <Navbar />
           {children}
         </WorkspaceProvider>

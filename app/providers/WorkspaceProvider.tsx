@@ -11,6 +11,7 @@ interface WorkspaceContextType {
   dispatchLocal: (action: WorkspaceAction) => void;
   tabLabel: string;
   activeTabs: number;
+  isConnected: boolean;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType | null>(null);
